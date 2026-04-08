@@ -17,27 +17,33 @@ jobs:
             sdk-index-url: https://update.flipperzero.one/firmware/directory.json
             sdk-channel: release
             artifact-suffix: ofw
+            extra-cflags: ""
 
           - name: Momentum / Unleashed / RogueMaster
             sdk-index-url: https://up.momentum-fw.dev/firmware/directory.json
             sdk-channel: release
             artifact-suffix: momentum
+            extra-cflags: "-DMOMENTUM_FW"
 
     name: Build for ${{ matrix.name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build with ufbt
+      - name: Setup ufbt
         uses: flipperdevices/flipperzero-ufbt-action@v0.1
-        id: build-app
         with:
           sdk-index-url: ${{ matrix.sdk-index-url }}
           sdk-channel: ${{ matrix.sdk-channel }}
+          task: setup
+
+      - name: Build FAP
+        run: |
+          ufbt CFLAGS="${{ matrix.extra-cflags }}"
 
       - name: Rename FAP with suffix
         run: |
-          find . -name "*.fap" -exec mv {} flipnote_${{ matrix.artifact-suffix }}.fap \;
+          find dist/ -name "*.fap" -exec mv {} flipnote_${{ matrix.artifact-suffix }}.fap \;
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
