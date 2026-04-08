@@ -1,0 +1,71 @@
+name: Build FlipNote FAP
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: Official Firmware
+            sdk-index-url: https://update.flipperzero.one/firmware/directory.json
+            sdk-channel: release
+            artifact-suffix: ofw
+
+          - name: Momentum / Unleashed / RogueMaster
+            sdk-index-url: https://up.momentum-fw.dev/firmware/directory.json
+            sdk-channel: release
+            artifact-suffix: momentum
+
+    name: Build for ${{ matrix.name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build with ufbt
+        uses: flipperdevices/flipperzero-ufbt-action@v0.1
+        id: build-app
+        with:
+          sdk-index-url: ${{ matrix.sdk-index-url }}
+          sdk-channel: ${{ matrix.sdk-channel }}
+
+      - name: Rename FAP with suffix
+        run: |
+          find . -name "*.fap" -exec mv {} flipnote_${{ matrix.artifact-suffix }}.fap \;
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flipnote-${{ matrix.artifact-suffix }}
+          path: "flipnote_${{ matrix.artifact-suffix }}.fap"
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*.fap
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            | Firmware | File |
+            |----------|------|
+            | Official Firmware | `flipnote_ofw.fap` |
+            | Momentum / Unleashed / RogueMaster | `flipnote_momentum.fap` |
+
+            Copy the correct `.fap` to `/ext/apps/Tools/` on your SD card.
