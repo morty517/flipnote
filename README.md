@@ -1,12 +1,13 @@
-# 📝 FlipNote
+# FlipNote
 
-**A real text editor for Flipper Zero** — because 5 buttons and a 128×64 screen are more than enough.
+**A real text editor for Flipper Zero** — bc 5 buttons and a 128×64 screen are more than enough.
 
-> Made to prove the Flipper forum wrong. They said it couldn't be usable. It can. :3
+> Made to prove the Flipper forum wrong. They said it couldn't be usable.
+> It can. :3
 
 ---
 
-## ✨ Features
+## Features
 
 - **Open / Save / Save As** — full file browser powered by Momentum's native file picker
 - **Virtual buffer** — handles large files without crashing; only loads ~80 lines into RAM at a time, streams the rest from SD card
@@ -23,7 +24,7 @@
 
 ---
 
-## 🎮 Controls
+## Controls
 
 ### Editor
 | Button | Action |
@@ -51,7 +52,7 @@
 
 ---
 
-## 📁 Menu Reference
+## Menu Reference
 
 **F (File)**
 - `New` — create a new empty file
@@ -76,7 +77,7 @@
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### From Release (easiest)
 1. Download `flipnote.fap` from [Releases](../../releases/latest)
@@ -94,7 +95,7 @@ ufbt
 
 ---
 
-## ⚠️ Known limitations
+## Known limitations
 
 - Max **2000 lines** per file (index limit)
 - Max **128 characters** per line
@@ -104,18 +105,13 @@ ufbt
 
 ---
 
-## 🛠️ Built with
+## Built with
 
 - Flipper Zero SDK (Momentum firmware)
 - `ufbt` — micro Flipper Build Tool
-- Pure C, single file, ~850 lines
 
 ---
 
-## 📜 License
+## License
 
 MIT — do whatever you want with it :3
-
----
-
-*First file ever created entirely on a Flipper Zero: `Meow\nThis is the first file created entirely on flipper0 !\n;3`* 🐾
